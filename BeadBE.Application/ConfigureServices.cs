@@ -10,7 +10,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddMediatR(typeof(ConfigureServices).Assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
         services.AddScoped(
             typeof(IPipelineBehavior<,>),

@@ -1,5 +1,4 @@
-﻿using BeadBE.Api.Common.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
@@ -90,13 +89,6 @@ namespace BeadBE.Api.Common.Errors
             if (traceId is not null)
             {
                 problemDetails.Extensions["traceId"] = traceId;
-            }
-
-            var errors = httpContext?.Items[HttpContextItemKeys.Errors];
-
-            if (errors is not null)
-            {
-                problemDetails.Extensions.Add("errorCodes", JsonSerializer.Serialize(errors));
             }
         }
     }

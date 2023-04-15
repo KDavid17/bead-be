@@ -1,4 +1,4 @@
-﻿using BeadBE.Application.Authentication.Common;
+﻿using BeadBE.Application.AuthenticationLogic.Common;
 using BeadBE.Contracts.Authentication;
 using Mapster;
 

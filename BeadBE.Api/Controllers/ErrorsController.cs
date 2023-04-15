@@ -1,6 +1,7 @@
-﻿using BeadBE.Application.Common.Interfaces.Errors;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BeadBE.Api.Controllers
 {
@@ -16,8 +17,7 @@ namespace BeadBE.Api.Controllers
                 return NotFound();
             }
 
-            var exceptionHandlerFeature =
-                HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
 
             return Problem(
                 detail: exceptionHandlerFeature.Error.StackTrace,
@@ -30,9 +30,23 @@ namespace BeadBE.Api.Controllers
         {
             Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
 
+            if (exception?.InnerException is ValidationException validationException && validationException.Errors.Any())
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (var error in validationException.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
+                }
+
+                return base.ValidationProblem(modelStateDictionary);
+            }
+
             var (statusCode, title) = exception switch
             {
-                IServiceException serviceException => ((int)serviceException.StatusCode, serviceException.Message),
+                BadHttpRequestException requestException => (requestException.StatusCode, requestException.Message),
                 _ => (StatusCodes.Status500InternalServerError, "An unexpected error ocurred")
             };
 

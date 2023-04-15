@@ -1,3 +1,4 @@
+
 using BeadBE.Application;
 using BeadBE.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -7,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 {
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("default", policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
+
     var logger = new LoggerConfiguration()
         .MinimumLevel.Warning()
         .ReadFrom.Configuration(builder.Configuration)
@@ -23,6 +34,10 @@ var builder = WebApplication.CreateBuilder(args);
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.Configure<RouteOptions>(options =>
+    {
+        options.LowercaseUrls = true;
+    });
 
     builder.Services.AddSwaggerGen(option =>
     {
@@ -70,6 +85,7 @@ var app = builder.Build();
         app.UseExceptionHandler("/error-development");
     }
 
+    app.UseCors("default");
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
