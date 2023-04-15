@@ -1,4 +1,4 @@
-using BeadBE.Application.Authentication.Commands.Register;
+using BeadBE.Application.AuthenticationLogic.Commands.Register;
 
 namespace BeadBE.Architecture.Tests
 {

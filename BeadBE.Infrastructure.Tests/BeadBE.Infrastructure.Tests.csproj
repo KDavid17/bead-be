@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BeadBE.Application\BeadBE.Application.csproj" />
   </ItemGroup>
 
 </Project>
