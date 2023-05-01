@@ -13,6 +13,9 @@ namespace BeadBE.Api.Common.Mapping
             config.NewConfig<UserResult, UserResponse>()
                 .Map(dest => dest, src => src.User);
 
+            config.NewConfig<UserResult, UserProfileResponse>()
+                .Map(dest => dest, src => src.User);
+
             config.NewConfig<UsersResult, UsersResponse>()
                 .Map(dest => dest, src => src.Users);
 

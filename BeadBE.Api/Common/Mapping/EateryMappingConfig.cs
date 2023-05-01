@@ -17,7 +17,7 @@ namespace BeadBE.Api.Common.Mapping
                 .Map(dest => dest, src => src.Eatery);
 
             config.NewConfig<EateriesResult, EateriesResponse>()
-                .Map(dest => dest, src => src.Eaterys);
+                .Map(dest => dest, src => src.Eateries);
         }
     }
 }

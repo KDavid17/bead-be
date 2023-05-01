@@ -1,15 +1,14 @@
 ﻿using BeadBE.Application.Common.Interfaces.Persistence;
 using BeadBE.Application.EateryLogic.Common;
-using BeadBE.Application.EateryLogic.Queries.GetEatery;
 using MediatR;
 
-namespace BeadBE.Application.EateryLogic.Queries.GetEaterys
+namespace BeadBE.Application.EateryLogic.Queries.GetEateries
 {
-    public class GetEaterysQueryHandler : IRequestHandler<GetEateriesQuery, EateriesResult>
+    public class GetEateriesQueryHandler : IRequestHandler<GetEateriesQuery, EateriesResult>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetEaterysQueryHandler(IUnitOfWork unitOfWork)
+        public GetEateriesQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

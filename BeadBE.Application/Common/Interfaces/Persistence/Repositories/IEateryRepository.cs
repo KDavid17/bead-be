@@ -2,5 +2,8 @@
 
 namespace BeadBE.Application.Common.Interfaces.Persistence.Repositories
 {
-    public interface IEateryRepository : IBaseRepository<Eatery> { }
+    public interface IEateryRepository : IBaseRepository<Eatery>
+    {
+        Task<IEnumerable<Eatery>> FindEateriesByParamAsync(string searchParam);
+    }
 }

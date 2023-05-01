@@ -1,6 +1,10 @@
-﻿using BeadBE.Application.EateryLogic.Commands.DeleteEatery;
+﻿using Azure;
+using BeadBE.Application.EateryLogic.Commands.DeleteEatery;
 using BeadBE.Application.EateryLogic.Commands.PostEatery;
 using BeadBE.Application.EateryLogic.Commands.PutEatery;
+using BeadBE.Application.EateryLogic.Queries.GetEateries;
+using BeadBE.Application.EateryLogic.Queries.GetEateriesByParam;
+using BeadBE.Application.EateryLogic.Queries.GetEateriesByUserId;
 using BeadBE.Application.EateryLogic.Queries.GetEatery;
 using BeadBE.Contract.Eatery;
 using Mapster;
@@ -8,6 +12,7 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BeadBE.Api.Controllers
 {
@@ -26,13 +31,13 @@ namespace BeadBE.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEaterys()
+        public async Task<IActionResult> GetEateries()
         {
-            var query = new GetEateriesQuery();
+            GetEateriesQuery query = new();
 
             var response = _mapper.Map<EateriesResponse>(await _mediator.Send(query));
 
-            return Ok(response);
+            return Ok(response.Eateries);
         }
 
         [HttpGet("{id}")]
@@ -43,6 +48,35 @@ namespace BeadBE.Api.Controllers
             var response = _mapper.Map<EateryResponse>(await _mediator.Send(query));
 
             return Ok(response);
+        }
+
+        [HttpGet("user")]
+        public async Task<IActionResult> GetEateriesByUserId()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(id, out int parsedId))
+            {
+                GetEateriesByUserIdQuery query = new(parsedId);
+
+                var response = _mapper.Map<EateriesResponse>(await _mediator.Send(query));
+
+                return Ok(response.Eateries);
+            }
+            else
+            {
+                throw new BadHttpRequestException("Invalid UserId!");
+            }
+        }
+
+        [HttpGet("filtered")]
+        public async Task<IActionResult> GetEateriesByParam(string? searchParam)
+        {
+            GetEateriesByParamQuery query = new(searchParam ?? "");
+
+            var response = _mapper.Map<EateriesResponse>(await _mediator.Send(query));
+
+            return Ok(response.Eateries);
         }
 
         [HttpPost]

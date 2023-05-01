@@ -24,7 +24,7 @@ namespace BeadBE.Infrastructure.Authentication
             Claim[] claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.Name)
+                new Claim("role", user.Role.Name)
             };
 
             SymmetricSecurityKey key = new(System.Text.Encoding.UTF8.GetBytes(_jwtSettings.Secret));

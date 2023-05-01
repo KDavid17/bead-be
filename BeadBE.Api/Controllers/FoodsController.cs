@@ -2,7 +2,9 @@
 using BeadBE.Application.FoodLogic.Commands.PostFood;
 using BeadBE.Application.FoodLogic.Commands.PutFood;
 using BeadBE.Application.FoodLogic.Queries.GetFood;
-using BeadBE.Application.FoodLogic.Queries.GetFoodsDetails;
+using BeadBE.Application.FoodLogic.Queries.GetFoodDetails;
+using BeadBE.Application.FoodLogic.Queries.GetFoods;
+using BeadBE.Application.FoodLogic.Queries.GetFoodsDetailsByEateryId;
 using BeadBE.Contract.Food;
 using Mapster;
 using MapsterMapper;
@@ -29,11 +31,11 @@ namespace BeadBE.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFoods()
         {
-            var query = new GetFoodsQuery();
+            GetFoodsQuery query = new();
 
             var response = _mapper.Map<FoodsResponse>(await _mediator.Send(query));
 
-            return Ok(response);
+            return Ok(response.Foods);
         }
 
         [HttpGet("{id}")]
@@ -46,14 +48,24 @@ namespace BeadBE.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("details")]
-        public async Task<IActionResult> GetFoodsDetails()
+        [HttpGet("{id}/details")]
+        public async Task<IActionResult> GetFoodDetailsById(int id)
         {
-            var query = new GetFoodsDetailsQuery();
+            GetFoodDetailsByIdQuery query = new(id);
 
-            var response = _mapper.Map<FoodsDetailsResponse>(await _mediator.Send(query));
+            var response = _mapper.Map<FoodDetailsResponse>(await _mediator.Send(query));
             
             return Ok(response);
+        }
+
+        [HttpGet("details/eatery/{id}")]
+        public async Task<IActionResult> GetFoodsByEateryId(int id)
+        {
+            GetFoodsDetailsByEateryIdQuery query = new(id);
+
+            var response = _mapper.Map<FoodsDetailsResponse>(await _mediator.Send(query));
+
+            return Ok(response.FoodsDetails);
         }
 
         [HttpPost]

@@ -1,6 +1,5 @@
 ﻿using BeadBE.Application.Common.Interfaces.Persistence;
 using BeadBE.Application.FoodLogic.Common;
-using BeadBE.Application.FoodLogic.Queries.GetFood;
 using MediatR;
 
 namespace BeadBE.Application.FoodLogic.Queries.GetFoods

@@ -2,7 +2,6 @@
 {
     public record EateryResponse(
         int Id,
-        int UserId,
         string Name,
         int Height,
         int Width);

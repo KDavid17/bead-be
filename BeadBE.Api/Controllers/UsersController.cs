@@ -6,11 +6,13 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BeadBE.Api.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
@@ -24,16 +26,18 @@ namespace BeadBE.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsers()
         {
             var query = new GetUsersQuery();
 
             var response = _mapper.Map<UsersResponse>(await _mediator.Send(query));
 
-            return Ok(response);
+            return Ok(response.Users);
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(int id)
         {
             GetUserQuery query = new(id);
@@ -43,7 +47,27 @@ namespace BeadBE.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(id, out int parsedId))
+            {
+                GetUserQuery query = new(parsedId);
+
+                var response = _mapper.Map<UserProfileResponse>(await _mediator.Send(query));
+
+                return Ok(response);
+            }
+            else
+            {
+                throw new BadHttpRequestException("Invalid UserId!");
+            }
+        }
+
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutUser(int id, UserRequest request)
         {
             PutUserCommand command = new(
@@ -60,6 +84,7 @@ namespace BeadBE.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             DeleteUserCommand command = new(id);
