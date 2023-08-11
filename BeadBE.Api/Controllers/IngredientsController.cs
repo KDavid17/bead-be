@@ -32,7 +32,7 @@ namespace BeadBE.Api.Controllers
 
             var response = _mapper.Map<IngredientsResponse>(await _mediator.Send(query));
 
-            return Ok(response);
+            return Ok(response.Ingredients);
         }
 
         [HttpGet("{id}")]

@@ -1,4 +1,5 @@
 ﻿using BeadBE.Application.FoodLogic.Common;
+using BeadBE.Domain.Entities;
 using MediatR;
 
 namespace BeadBE.Application.FoodLogic.Commands.PostFood
@@ -6,5 +7,6 @@ namespace BeadBE.Application.FoodLogic.Commands.PostFood
     public record PostFoodCommand(
         int EateryId,
         string Name,
-        decimal Price) : IRequest<FoodResult>;
+        decimal Price,
+        IEnumerable<Ingredient>? Ingredients) : IRequest<FoodResult>;
 }

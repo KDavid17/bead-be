@@ -22,6 +22,8 @@ namespace BeadBE.Application.FoodLogic.Commands.DeleteFood
                 throw new BadHttpRequestException("Food with provided ID not found!", StatusCodes.Status404NotFound);
             }
 
+            await _unitOfWork.FoodIngredientRepository.RemoveRangeAsync(await _unitOfWork.FoodIngredientRepository.FindAsync(fi => fi.FoodId == command.Id));
+
             await _unitOfWork.FoodRepository.RemoveAsync(food);
 
             return new FoodResult(food);

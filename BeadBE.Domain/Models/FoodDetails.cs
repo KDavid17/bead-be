@@ -12,6 +12,8 @@ namespace BeadBE.Domain.Models
 
         public decimal Price { get; set; }
 
+        public int Quantity { get; set; } = 0;
+
         public IEnumerable<Ingredient> Ingredients { get; set; } = Enumerable.Empty<Ingredient>();
     }
 }

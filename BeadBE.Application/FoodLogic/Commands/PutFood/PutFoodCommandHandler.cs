@@ -20,16 +20,25 @@ namespace BeadBE.Application.FoodLogic.Commands.PutFood
 
         public async Task<FoodResult> Handle(PutFoodCommand command, CancellationToken cancellationToken)
         {
-            if (await _unitOfWork.FoodRepository.FindByIdAsync(command.Id) is null)
+            if (await _unitOfWork.FoodRepository.FindByIdAsync(command.Id) is not Food food)
             {
                 throw new BadHttpRequestException(
                     "Food with provided ID not found!",
                     StatusCodes.Status404NotFound);
             }
+            
+            food = _mapper.Map<Food>(command);
 
-            var food = _mapper.Map<Food>(command);
+            if (command.Ingredients is not null)
+            {
+                var ingredients = command.Ingredients;
 
-            await _unitOfWork.FoodRepository.UpdateAsync(food);
+                await _unitOfWork.FoodRepository.UpdateFoodWithIngredientsAsync(food, ingredients);
+            }
+            else
+            {
+                await _unitOfWork.FoodRepository.UpdateAsync(food);
+            }
 
             return new FoodResult(food);
         }

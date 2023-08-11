@@ -39,14 +39,14 @@ public partial class BeadContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=DAVID-LAPTOP\\MSSQLSERVER01;Database=Bead;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=DAVID-LAPTOP;Database=Bead;User Id=BeadAdmin;Password=admin123;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.Property(e => e.EndDate).HasColumnType("date");
-            entity.Property(e => e.StartDate).HasColumnType("date");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Eatery).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.EateryId)

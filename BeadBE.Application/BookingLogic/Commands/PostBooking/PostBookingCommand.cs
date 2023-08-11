@@ -1,4 +1,5 @@
 ﻿using BeadBE.Application.BookingLogic.Common;
+using BeadBE.Domain.Entities;
 using MediatR;
 
 namespace BeadBE.Application.BookingLogic.Commands.PostBooking
@@ -8,5 +9,6 @@ namespace BeadBE.Application.BookingLogic.Commands.PostBooking
         int UserId,
         bool DidOrder,
         DateTime StartDate,
-        DateTime? EndDate) : IRequest<BookingResult>;
+        DateTime? EndDate,
+        IEnumerable<BookingFood>? PreOrderedFoods) : IRequest<BookingResult>;
 }

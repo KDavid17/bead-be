@@ -1,6 +1,5 @@
 ﻿using BeadBE.Application.Common.Interfaces.Persistence;
 using BeadBE.Application.BookingLogic.Common;
-using BeadBE.Application.BookingLogic.Queries.GetBooking;
 using MediatR;
 
 namespace BeadBE.Application.BookingLogic.Queries.GetBookings

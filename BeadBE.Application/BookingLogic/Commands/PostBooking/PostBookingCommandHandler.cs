@@ -21,7 +21,16 @@ namespace BeadBE.Application.BookingLogic.Commands.PostBooking
         {
             var booking = _mapper.Map<Booking>(command);
 
-            await _unitOfWork.BookingRepository.AddAsync(booking);
+            if (booking.DidOrder)
+            {
+                var preOrderedFoods = command.PreOrderedFoods;
+
+                await _unitOfWork.BookingRepository.AddBookingWithFoodsAsync(booking, preOrderedFoods);
+            } 
+            else
+            {
+                await _unitOfWork.BookingRepository.AddAsync(booking);
+            }
 
             return new BookingResult(booking);
         }

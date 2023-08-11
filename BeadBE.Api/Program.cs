@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.AddPolicy("default", policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -78,11 +78,11 @@ var app = builder.Build();
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        app.UseExceptionHandler("/error");
+        app.UseExceptionHandler("/error-development");
     }
     else
     {
-        app.UseExceptionHandler("/error-development");
+        app.UseExceptionHandler("/error");
     }
 
     app.UseCors("default");

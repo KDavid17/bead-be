@@ -21,7 +21,16 @@ namespace BeadBE.Application.FoodLogic.Commands.PostFood
         {
             var food = _mapper.Map<Food>(command);
 
-            await _unitOfWork.FoodRepository.AddAsync(food);
+            if (command.Ingredients is not null)
+            {
+                var ingredients = command.Ingredients;
+
+                await _unitOfWork.FoodRepository.AddFoodWithIngredientsAsync(food, ingredients);
+            }
+            else
+            {
+                await _unitOfWork.FoodRepository.AddAsync(food);
+            }
 
             return new FoodResult(food);
         }

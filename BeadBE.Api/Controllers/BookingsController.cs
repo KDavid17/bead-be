@@ -1,13 +1,15 @@
 ﻿using BeadBE.Application.BookingLogic.Commands.DeleteBooking;
 using BeadBE.Application.BookingLogic.Commands.PostBooking;
 using BeadBE.Application.BookingLogic.Commands.PutBooking;
-using BeadBE.Application.BookingLogic.Queries.GetBooking;
+using BeadBE.Application.BookingLogic.Queries.GetBookings;
+using BeadBE.Application.BookingLogic.Queries.GetBookingsByUserId;
 using BeadBE.Contract.Booking;
 using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BeadBE.Api.Controllers
 {
@@ -35,14 +37,23 @@ namespace BeadBE.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookingById(int id)
+        [HttpGet("user")]
+        public async Task<IActionResult> GetBookingsByUserId()
         {
-            var query = new GetBookingQuery(id);
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var response = _mapper.Map<BookingResponse>(await _mediator.Send(query));
+            if (int.TryParse(id, out int parsedId))
+            {
+                var query = new GetBookingsByUserIdQuery(parsedId);
 
-            return Ok(response);
+                var response = await _mediator.Send(query);
+
+                return Ok(response.Bookings);
+            }
+            else
+            {
+                throw new BadHttpRequestException("Invalid UserId!");
+            }
         }
 
         [HttpPost]
